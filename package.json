@@ -1,7 +1,19 @@
 {
-  "name": "ctrl-c",
-  "version": "0.1.0",
-  "private": true,
+  "name": "control-copy",
+  "version": "0.1.4",
+  "private": false,
+  "description": "A vue3.js component to easily add copy to clipboard functionality to any html input tag ",
+  "main": "src/index.js",
+  "keywords": [
+    "ctrlc",
+    "copy",
+    "input",
+    "html-input-tag",
+    "click",
+    "easy-copy"
+  ],
+  "author": "Umair Khan 📬 umair@siqasoft.com",
+  "license": "ISC",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

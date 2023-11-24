@@ -1,4 +1,5 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+import App from "./App.vue";
+import CtrlC from "./index";
 
-createApp(App).mount('#app')
+createApp(App).use(CtrlC).mount("#app");

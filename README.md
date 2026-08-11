@@ -1,6 +1,6 @@
 # control-copy
 
-A vue3.js component to easily add copy to clipboard functionality to any html input tag
+A Vue 3 component to easily add copy-to-clipboard functionality to any HTML input or textarea.
 
 ## Install
 
@@ -10,28 +10,101 @@ npm i control-copy
 
 ## Usage
 
+### Component
+
 ```js
 import CtrlC from "control-copy";
 
-//for displaying default icon in your template. Wrap input tag in <CtrlC></Ctrl>
-<CtrlC>
-  <input type="text" />
-</CtrlC>
+// Register globally (optional)
+app.use(CtrlC);
+```
 
-//or to display your emoji icon, pass in any emoji as prop
+#### Basic input
+
+```html
+<CtrlC>
+  <input type="text" value="Click the icon to copy" />
+</CtrlC>
+```
+
+#### Textarea
+
+```html
+<CtrlC>
+  <textarea>Works on textareas too.</textarea>
+</CtrlC>
+```
+
+#### Custom icon
+
+```html
 <CtrlC copyIcon="📃">
   <input type="text" />
 </CtrlC>
 
-//or to display any string as copy button, pass in any string as prop
-<CtrlC copyIcon="C">
+<CtrlC copyIcon="Copy">
   <input type="text" />
 </CtrlC>
 ```
 
-## Note
+#### Always-visible icon
 
-At the moment only one child input tag is supported and only emoji and string are accepted as **copyIcon** param
+```html
+<CtrlC :show-icon="true">
+  <input type="text" />
+</CtrlC>
+```
+
+#### Copy arbitrary text (no input needed)
+
+```html
+<CtrlC text="https://example.com/share-link">
+  <button>Copy link</button>
+</CtrlC>
+```
+
+#### Listen for events
+
+```html
+<CtrlC @copy-success="onSuccess" @copy-error="onError">
+  <input type="text" />
+</CtrlC>
+```
+
+Visual feedback is built-in — the icon changes to ✅ for 2 seconds after a successful copy.
+
+### Directive
+
+```js
+import { vCtrlC } from "control-copy";
+```
+
+```html
+<input v-ctrl-c value="Click to copy" />
+<p v-ctrl-c>Click this paragraph to copy its text</p>
+<button v-ctrl-c="'custom text'">Copy "custom text"</button>
+```
+
+Register globally:
+
+```js
+app.directive("ctrl-c", vCtrlC);
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `copyIcon` | `String` | `"📋"` | Icon or text shown on the copy button |
+| `text` | `String` | `null` | Text to copy. When set, copies this instead of reading from an input |
+| `showIcon` | `Boolean` | `false` | When `true`, the icon is always visible (not just on hover) |
+
+## Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `copy-success` | `string` | Emitted with the copied text on success |
+| `copy-error` | `Error` | Emitted with the error object on failure |
 
 ## License
 

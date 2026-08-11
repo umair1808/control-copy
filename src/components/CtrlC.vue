@@ -9,7 +9,7 @@
     v-else
     ref="slotRef"
     class="ctrl-c-input-container"
-    :class="{ 'ctrl-c-show-icon': showIcon }"
+    :class="{ 'ctrl-c-textarea': isTextarea, 'ctrl-c-show-icon': showIcon }"
   >
     <slot></slot>
     <div
@@ -52,6 +52,7 @@ const emit = defineEmits(["copy-success", "copy-error", "copy"]);
 
 const slotRef = ref(null);
 const copied = ref(false);
+const isTextarea = ref(false);
 let inputElement = null;
 let copyTimer = null;
 let transparentChild = null;
@@ -129,6 +130,9 @@ onMounted(() => {
 
   // Widget mode: find the input or textarea
   inputElement = slotRef.value.querySelector("input, textarea");
+  if (inputElement?.tagName === "TEXTAREA") {
+    isTextarea.value = true;
+  }
 });
 
 onUnmounted(() => {
@@ -158,6 +162,11 @@ onUnmounted(() => {
   color: #aaa;
   display: block;
   transition: opacity 0.15s ease;
+}
+
+.ctrl-c-textarea .ctrl-c-icon-button {
+  top: 8px;
+  transform: none;
 }
 
 .ctrl-c-copied {

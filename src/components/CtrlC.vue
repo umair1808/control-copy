@@ -1,5 +1,12 @@
 <template>
+  <!-- Transparent mode: zero DOM injected -->
+  <span v-if="!ui" ref="slotRef">
+    <slot :copy="handleClick" :copied="copied"></slot>
+  </span>
+
+  <!-- Widget mode: our icon-on-hover UX -->
   <span
+    v-else
     ref="slotRef"
     class="ctrl-c-input-container"
     :class="{ 'ctrl-c-show-icon': showIcon }"
@@ -20,7 +27,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const props = defineProps({
   copyIcon: {
@@ -35,18 +42,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  ui: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(["copy-success", "copy-error"]);
+const emit = defineEmits(["copy-success", "copy-error", "copy"]);
 
 const slotRef = ref(null);
 const copied = ref(false);
 let inputElement = null;
 let copyTimer = null;
-
-onMounted(() => {
-  inputElement = slotRef.value.querySelector("input, textarea");
-});
+let transparentChild = null;
 
 const copyFallback = (text) => {
   const textarea = document.createElement("textarea");
@@ -86,7 +94,6 @@ const getTextToCopy = () => {
 const handleClick = async () => {
   const textToCopy = getTextToCopy();
 
-  // Only attempt select on an actual input/textarea element
   if (inputElement && !props.text) {
     inputElement.select();
     inputElement.setSelectionRange(0, inputElement.value.length);
@@ -100,11 +107,36 @@ const handleClick = async () => {
       if (!ok) throw new Error("execCommand copy failed");
     }
     showCopiedFeedback();
+    emit("copy", textToCopy, true);
     emit("copy-success", textToCopy);
   } catch (ex) {
+    emit("copy", textToCopy || "", false);
     emit("copy-error", ex);
   }
 };
+
+onMounted(() => {
+  if (!props.ui) {
+    // Transparent mode: auto-bind click to first child element
+    transparentChild = slotRef.value?.firstElementChild;
+    if (transparentChild) {
+      transparentChild.addEventListener("click", handleClick);
+      transparentChild.style.cursor =
+        transparentChild.style.cursor || "pointer";
+    }
+    return;
+  }
+
+  // Widget mode: find the input or textarea
+  inputElement = slotRef.value.querySelector("input, textarea");
+});
+
+onUnmounted(() => {
+  if (transparentChild) {
+    transparentChild.removeEventListener("click", handleClick);
+    transparentChild = null;
+  }
+});
 </script>
 
 <style scoped>

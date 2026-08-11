@@ -1,6 +1,6 @@
 {
   "name": "control-copy",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": false,
   "description": "A Vue 3 component to easily add copy-to-clipboard functionality to any HTML input tag",
   "main": "dist/index.umd.js",
@@ -32,7 +32,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:demo": "vite build --config vite.demo.config.js"
   },
   "peerDependencies": {
     "vue": "^3.2.0"

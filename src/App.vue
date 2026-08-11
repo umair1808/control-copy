@@ -1,8 +1,27 @@
 <template>
   <h1>control-copy demo</h1>
 
+  <!-- ===== Transparent mode ===== -->
   <section>
-    <h2>Basic input with default icon</h2>
+    <h2>Transparent mode — your button, our copy logic</h2>
+    <p class="hint">Zero DOM injected. Copies whatever you pass via the <code>text</code> prop.</p>
+
+    <CtrlC text="This was copied from transparent mode!" :ui="false">
+      <button class="demo-btn">Click to copy</button>
+    </CtrlC>
+
+    <CtrlC :ui="false" v-slot="{ copy, copied }" text="Copied via scoped slot!">
+      <button class="demo-btn" @click="copy">
+        {{ copied ? "✅ Copied!" : "Copy (scoped slot)" }}
+      </button>
+    </CtrlC>
+  </section>
+
+  <!-- ===== Widget mode ===== -->
+  <section>
+    <h2>Widget mode — icon on hover</h2>
+    <p class="hint">The original behavior. Wraps an input or textarea with a copy icon.</p>
+
     <CtrlC>
       <input type="text" value="Hover and click the clipboard" />
     </CtrlC>
@@ -31,13 +50,6 @@
       <input type="text" value="Icon is always visible" />
     </CtrlC>
   </section>
-
-  <section>
-    <h2>Copy custom text (no input needed)</h2>
-    <CtrlC text="This text was copied from the text prop!">
-      <button class="copy-btn">Click anywhere in this box to copy</button>
-    </CtrlC>
-  </section>
 </template>
 
 <script setup>
@@ -64,6 +76,17 @@ h2 {
 section {
   margin-bottom: 1rem;
 }
+.hint {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0 0 0.5rem 0;
+}
+code {
+  background: #f0f0f0;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
 input,
 textarea {
   width: 100%;
@@ -76,12 +99,18 @@ textarea {
 textarea {
   resize: vertical;
 }
-.copy-btn {
-  padding: 0.5rem 1rem;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
+.demo-btn {
+  padding: 0.5rem 1.2rem;
+  background: #4caf50;
+  color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.95rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.demo-btn:hover {
+  background: #43a047;
 }
 </style>
